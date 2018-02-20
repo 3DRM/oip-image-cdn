@@ -14,7 +14,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "geopattern": "^1.2.3",
-    "oip-js": "^1.0.20",
+    "oip-js": "^1.0.21",
     "sharp": "^0.19.0"
   }
 }

@@ -1,4 +1,4 @@
-var OIPJS = require("oip-js");
+var OIPJS = require("oip-js")();
 var GeoPattern = require('geopattern');
 var fs = require("fs");
 var sharp = require('sharp');
