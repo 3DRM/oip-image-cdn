@@ -59,4 +59,4 @@ typings/
 
 .png
 tmp/
-thumbnails/
+thumbnails/*.png

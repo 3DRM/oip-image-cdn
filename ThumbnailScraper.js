@@ -1,26 +1,28 @@
-var OIPJS = require("oip-js")();
+var OIPJS = require("oip-js").OIPJS;
 var GeoPattern = require('geopattern');
 var fs = require("fs");
 var sharp = require('sharp');
+
+var Core = OIPJS();
 
 var ThumbnailScraper = {};
 
 ThumbnailScraper.getThumbnail = function(txid, onSuccess, onError){
 	console.log("Grabbing Artifact!", txid);
 
-	OIPJS.Index.getArtifactFromID(txid, function(artifact){
+	Core.Index.getArtifactFromID(txid, function(artifact){
 		console.log("Grabbing Thumbnail!");
 
-		var thumbnail = OIPJS.Artifact.getThumbnail(artifact);
-		var location = OIPJS.Artifact.getLocation(artifact);
+		var thumbnail = artifact.getThumbnail();
+		var location = artifact.getLocation();
 
 		if (!thumbnail){
-			ThumbnailScraper.generateGeopattern(artifact.txid, onSuccess, onError)
+			ThumbnailScraper.generateGeopattern(artifact.getTXID(), onSuccess, onError)
 		} else {
 			console.log("Grabbing Thumbnail from IPFS!");
-			OIPJS.Network.ipfsUploadAPI.files.cat(OIPJS.util.buildIPFSShortURL(location, thumbnail), function(err, data){
+			Core.Network.ipfsUploadAPI.files.cat(Core.util.buildIPFSShortURL(location, thumbnail), function(err, data){
 				if (err) {
-					ThumbnailScraper.generateGeopattern(artifact.txid, onSuccess, onError);
+					ThumbnailScraper.generateGeopattern(artifact.getTXID(), onSuccess, onError);
 					return;
 				}
 
@@ -30,7 +32,7 @@ ThumbnailScraper.getThumbnail = function(txid, onSuccess, onError){
 					.resize(720, 480)
 					.toFile(__dirname + "/thumbnails/" + txid + ".png", function(err, info){
 						if (err){
-							ThumbnailScraper.generateGeopattern(artifact.txid, onSuccess, onError)
+							ThumbnailScraper.generateGeopattern(artifact.getTXID(), onSuccess, onError)
 						} else {
 							console.log("Thumbnail written successfully.");
 							onSuccess();
